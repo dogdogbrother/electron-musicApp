@@ -7,7 +7,7 @@
         </div>
         <div class="content">
           <h2 v-if="songinfo.track_info.title">{{songinfo.track_info.title}}</h2>
-          <P  v-if="songinfo.track_info.singer[0].title"class="author"><i class="el-icon-info"></i>{{songinfo.track_info.singer[0].title}}</P>
+          <P  v-if="songinfo.track_info.singer[0].title" class="author"><i class="el-icon-info"></i>{{songinfo.track_info.singer[0].title}}</P>
           <div class="detail">
             <p v-if="songinfo.track_info.album.title">专辑: {{songinfo.track_info.album.title}}</p>
             <p v-if="songinfo.info.lan">语种: {{songinfo.info.lan.content[0].value}}</p>
