@@ -60,6 +60,12 @@ import {
 
 export default {
   name: 'SearchMusic',
+  props:{
+    platform:{
+      type:String,
+      default:"1"
+    }
+  },
   data() {
     return {
       isFocus: false,
@@ -180,6 +186,11 @@ export default {
         content.trim() !== '' && this.getWangYiMusicData(content)
       }
       this.$emit('selectType', value)
+    },
+    platform (value) {
+      console.log(2222);
+      
+      this.select = value;
     }
   }
 }

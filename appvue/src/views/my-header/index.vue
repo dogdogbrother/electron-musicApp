@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <section>
-      <h1 :class="{isWangy:isWY}">音乐</h1>
+      <h1 :class="{isWangy:isWY}" @click="switchover">音乐</h1>
       <ul>
         <li 
           v-for="(item) in navList" 
@@ -16,6 +16,7 @@
         @clickItemSong = "showSongDetail"
         @selectType =  "selectMusicChange"
         @enterOptionSong = 'showSongsList'
+        :platform="platform"
       >
       </search-music>
     </section>
@@ -31,7 +32,8 @@ export default {
     return {
       navList:navListData,
       selectNav:0,
-      isWY:false
+      isWY:false,
+      platform:'1'
     } 
   },
   methods:{
@@ -46,30 +48,42 @@ export default {
       //type为1 是QQ 2为 网易
       if(type === '1'){
         this.isWY = false;
+        this.platform = '1'
       }else{
         this.isWY = true;
+        this.platform = '2'
+      }
+    },
+    //
+    switchover(){
+      console.log(111);
+      
+      if(this.platform === '1'){
+        this.platform = '2'
+      }else{
+        this.platform = '1'
       }
     },
     showSongsList (data) {
       console.log(data);
-      
     }
   },
   created(){
-              //这个是qq音乐新的跨域方式
-        // let origin = `https://bird.ioliu.cn/v1?url=`
-        // let url = origin + 'http://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&key=第三人称&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0'
-        // //key 是input中的值 
-        // axios.get(url).then(res =>{
-        //     console.log(res);
-        // })
-        //如果是第一次运行项目，先进入根目录下的 WYYMusicApi文件，cnpm install
-        //每次运行项目前，先单独开一个命令行，进入根目录下的 WYYMusicApi ,运行 node app.js 
-    let key = '遥远的她'
-        //key 是input中的值
-    axios.get(`http://localhost:3000/search/suggest?keywords=${key}`).then(res =>{
-      //console.log(res);
-    })
+   // https://u.y.qq.com/cgi-bin/musicu.fcg?
+  //热河
+// 0020WVx30hXO4K
+
+
+
+let origin = `https://bird.ioliu.cn/v1?url=`
+let data = {"req":{"module":"CDN.SrfCdnDispatchServer","method":"GetCdnDispatch","param":{"guid":"1009711786","calltype":0,"userip":""}},"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"1009711786","songmid":["0020WVx30hXO4K"],"songtype":[0],"uin":"0","loginflag":1,"platform":"20"}},"comm":{"uin":0,"format":"json","ct":20,"cv":0}}
+let data2 = JSON.stringify(data);
+console.log(data2);
+let url = origin + `https://u.y.qq.com/cgi-bin/musicu.fcg?-=getplaysongvkey7365176950545029&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0&data=${data2}`
+      //key 是input中的值
+      axios.get(url).then( res =>{
+        console.log(res);
+      })
   },
   components:{
     SearchMusic

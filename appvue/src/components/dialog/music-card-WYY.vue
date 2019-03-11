@@ -28,7 +28,7 @@
 import axios from 'axios'
 import {mapState,mapGetters,mapActions} from 'vuex';
 export default {
-  name: 'SearchMusic',
+  name: 'card-WYY',
   data() {
     return {
       songinfo:null

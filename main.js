@@ -1,13 +1,13 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
-
+const {app, BrowserWindow,Menu} = require('electron')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600, frame: true})
+  Menu.setApplicationMenu(null)
+  mainWindow = new BrowserWindow({minWidth: 1200, height: 600, minHeight: 120,frame: true})
 
   // and load the index.html of the app.
   mainWindow.loadFile('appvue/dist/index.html')
