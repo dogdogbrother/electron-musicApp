@@ -4,6 +4,7 @@
     <!-- <router-view/> -->
     <musicCardDLQQ></musicCardDLQQ>
     <musicCardDLWYY></musicCardDLWYY>
+    <playList></playList>
   </div>
 </template>
 
@@ -11,7 +12,7 @@
 import myHeader from '@/views/my-header/index'
 import musicCardDLQQ from '@/components/dialog/music-card-QQ'
 import musicCardDLWYY from '@/components/dialog/music-card-WYY'
-//import playList from '@/components/playList/index'
+import playList from '@/components/playList/index'
 import {mapState,mapGetters,mapActions} from 'vuex';
 import { log } from 'util';
 export default {
@@ -19,7 +20,8 @@ export default {
   components:{
     'my-header':myHeader,
     musicCardDLQQ,
-    musicCardDLWYY
+    musicCardDLWYY,
+    playList
   }
 }
 </script>

@@ -1,10 +1,21 @@
 <!-- 用于 -->
 <template>
-  <div>1234</div>
+  <div class="box">
+    <div class="container">
+      <div class="control-btns">
+        <div class="prev" title="上一首"></div>
+        <div class="play" title="暂停播放"></div>
+        <div class="next" title="下一首"></div>
+      </div>
+      <div class="music-mini"></div>
+      <div class="operation"></div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
+  name: 'play-list',
   data () {
     return {
     };
@@ -34,7 +45,58 @@ export default {
 }
 
 </script>
-<style lang='scss' scoped>
+<style lang='less' scoped>
+.box{
+  position:fixed;
+  left: 0;
+  bottom: 0;
+  height: 60px;
+  background-color:rgba(0, 0, 0, 0.9);
+  color: #666;
+  width: 100%;
+  .container{
+    width: 800px;
+    background-color: red;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    .control-btns{
+      width: 150px;
+      background-color: blue;
+      display: flex;
+      justify-content: space-around;
+      box-sizing: border-box;
+      padding: 10px 0;
+      .prev,.next{
+        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+        background-image: url('../../assets/icon.png');
+        background-position: -77px -118px;
+        cursor: pointer;
+      }
+      .play{
+        width: 40px;
+        height: 40px;
+        background-image: url('../../assets/icon.png');
+        background-position: -137px -113px;
+        cursor: pointer;
+      }
+      .next{
+        background-position: -207px -118px;
+      }
+      .prev:hover{
+        background-position: -77px -157px;
+      }
+      .play:hover{
+        background-position: -137px -153px;
+      }
+      .next:hover{
+        background-position: -207px -158px;
+      }
+    }
+  }
+}
 </style>
 <!-- 
     我重新處理下歌曲播放的問題，首先我要找到播放鏈接。
