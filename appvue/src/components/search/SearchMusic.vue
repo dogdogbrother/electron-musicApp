@@ -129,7 +129,6 @@ export default {
     handleKeyDownEvent (event) {
       if (event.keyCode === 40) {
         if (!this.lis.length) return
-        // console.log(this.lis)
         if (this.count > (this.lis.length-1)) {
           this.count = -1
         }
@@ -137,7 +136,6 @@ export default {
       } 
       else if (event.keyCode === 38) {
         if (!this.lis.length) return
-        // console.log(this.lis)
         if (this.count < 1) {
           this.count = this.lis.length
         }
@@ -188,8 +186,7 @@ export default {
       this.$emit('selectType', value)
     },
     platform (value) {
-      console.log(2222);
-      
+
       this.select = value;
     }
   }

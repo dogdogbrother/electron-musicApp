@@ -20,7 +20,7 @@
             <p v-if="songinfo.info.pub_time.content[0].value">发行时间: {{songinfo.info.pub_time.content[0].value}}</p>
           </div>
           <div class="btns">
-            <el-button type="primary">立即播放</el-button>
+            <el-button type="primary" @click="nowPlay">立即播放</el-button>
             <el-button>加入列表</el-button>
           </div>
         </div>
@@ -55,6 +55,7 @@ export default {
     getImgSrc(midId){
       return `https://y.gtimg.cn/music/photo_new/T002R300x300M000${midId}.jpg?max_age=2592000`
     },
+      //通过此函数获取到歌曲的歌手名字专辑一大堆玩意儿。
     getQQData(util){
       let origin = `https://bird.ioliu.cn/v1?url=`
       let parameter = JSON.stringify({
@@ -74,6 +75,22 @@ export default {
       + parameter
       axios.get(url).then( res =>{
         this.songinfo = res.data.songinfo.data;
+        //this.songinfo.track_info.mid 为当前歌曲的id
+      })
+    },
+      //点击立即播放，执行此函数通过this.songinfo.track_info.mid此参数 获取到当前播放歌曲的vkey，最好拼接成url
+    nowPlay(){
+      let musicMidId = this.songinfo.track_info.mid;
+      let origin = `https://bird.ioliu.cn/v1?url=`
+      let data = {"req":{"module":"CDN.SrfCdnDispatchServer","method":"GetCdnDispatch","param":{"guid":"1009711786","calltype":0,"userip":""}},"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"1009711786","songmid":[musicMidId],"songtype":[0],"uin":"0","loginflag":1,"platform":"20"}},"comm":{"uin":0,"format":"json","ct":20,"cv":0}}
+      let data2 = JSON.stringify(data);
+      let url = origin + `https://u.y.qq.com/cgi-bin/musicu.fcg?-=getplaysongvkey7365176950545029&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0&data=${data2}`
+    //key 是input中的值
+      axios.get(url).then( res =>{
+        //通过此ajax得到了数据中，req_0.data.midurlinfo[0].purl为拼接好的路径
+        //前面加上url地址即可 http://36.27.210.13/amobile.music.tc.qq.com/  拼接后为歌曲播放地址
+        let musicUrl = 'http://36.27.210.13/amobile.music.tc.qq.com/'+res.data.req_0.data.midurlinfo[0].purl;
+        this.$store.dispatch('updataNowMusicPlayUrl',musicUrl)
       })
     }
   },

@@ -56,14 +56,12 @@ export default {
       let url = `http://localhost:3000/song/detail?ids=${id}`
       axios.get(url).then(res =>{
         this.songinfo = res.data.songs[0];
-        console.log(this.songinfo);
       })
     },
   },
   watch:{
     getCardDataWYY(value){
       this.getData(value.id)
-      console.log(value);
     }
   }
 }

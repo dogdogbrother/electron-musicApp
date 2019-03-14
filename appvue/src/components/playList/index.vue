@@ -7,40 +7,44 @@
         <div class="play" title="暂停播放"></div>
         <div class="next" title="下一首"></div>
       </div>
-      <div class="music-mini"></div>
+      <div class="music-mini">
+        <!-- <audio :src="getNowMusicUrl"  controls="controls" class="current-play-tag" type='m4a' @ended='endPlay'></audio> -->
+      </div>
       <div class="operation"></div>
     </div>
   </div>
 </template>
-
 <script>
+import axios from 'axios'
+import {mapState,mapGetters,mapActions} from 'vuex';
+import { setTimeout } from 'timers';
 export default {
   name: 'play-list',
   data () {
     return {
+      currentPlayUrl:null,
     };
   },
 
   components: {},
 
-  computed: {},
+  computed: {
+    ...mapGetters({
+      getNowMusicUrl:'getNowMusicUrl'
+    })
+  },
 
-  mounted: {},
-
-  methods: {},
+  methods: {
+    endPlay(){
+      console.log(123);
+    }
+  },
 
   created(){
     //热河
-    // 0020WVx30hXO4K
-    let origin = `https://bird.ioliu.cn/v1?url=`
-    let data = {"req":{"module":"CDN.SrfCdnDispatchServer","method":"GetCdnDispatch","param":{"guid":"1009711786","calltype":0,"userip":""}},"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"1009711786","songmid":["0020WVx30hXO4K"],"songtype":[0],"uin":"0","loginflag":1,"platform":"20"}},"comm":{"uin":0,"format":"json","ct":20,"cv":0}}
-    let data2 = JSON.stringify(data);
-    console.log(data2);
-    let url = origin + `https://u.y.qq.com/cgi-bin/musicu.fcg?-=getplaysongvkey7365176950545029&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0&data=${data2}`
-    //key 是input中的值
-    axios.get(url).then( res =>{
-    console.log(res);
-    })
+    // 0020WVx30hXO4K 
+      var player = new QMplayer({ target: "auto" });
+      player.play("http://isure.stream.qqmusic.qq.com/C400000mu01y4LyZ1Z.m4a?guid=7485111988&vkey=BA4AA755774C6BCF64B01D7B281B431870D778F6CC538EF65AD5A78F6DBC4D0088C34962A41043AF6EB5D5D359BD7DF5159BFB92AF1FDF97&uin=0&fromtag=66");
   }
 }
 
@@ -56,13 +60,12 @@ export default {
   width: 100%;
   .container{
     width: 800px;
-    background-color: red;
     height: 100%;
     margin: 0 auto;
     display: flex;
+    justify-content: space-between;
     .control-btns{
       width: 150px;
-      background-color: blue;
       display: flex;
       justify-content: space-around;
       box-sizing: border-box;
@@ -95,7 +98,16 @@ export default {
         background-position: -207px -158px;
       }
     }
+    .operation{
+      width: 140px;
+      background: #fff;
+    }
   }
+}
+.current-play-tag{
+  background: rgba(0, 0, 0, 0);
+  margin-top: 4px;
+  border: none;
 }
 </style>
 <!-- 
