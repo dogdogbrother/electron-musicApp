@@ -7,7 +7,6 @@
     <playList></playList>
   </div>
 </template>
-
 <script>
 import myHeader from '@/views/my-header/index'
 import musicCardDLQQ from '@/components/dialog/music-card-QQ'

@@ -16,7 +16,7 @@
             <span> {{songinfo.ar[0].name}}</span>
           </div>
           <div class="btns">
-            <el-button type="primary">立即播放</el-button>
+            <el-button type="primary" @click="nowPlay">立即播放</el-button>
             <el-button>加入列表</el-button>
           </div>
         </div>
@@ -31,7 +31,7 @@ export default {
   name: 'card-WYY',
   data() {
     return {
-      songinfo:null
+      songinfo:null //songinfo.id 是当前歌曲的信息
     }
   },
   computed:{
@@ -58,6 +58,17 @@ export default {
         this.songinfo = res.data.songs[0];
       })
     },
+    //点击立即播放，执行此函数
+    nowPlay(){
+      let id = this.songinfo.id;
+      let url = `http://localhost:3000/song/url?id=${id}`
+      axios.get(url).then(res =>{
+        //当前url是不改变播放状态的 只是用于显示img和name，以及提醒更换歌曲了
+        this.$store.dispatch('updataNowMusicPlay',{url:res.data.data[0].url,name:this.songinfo.name})
+        // 播放列表才是真正控制播放内容的数据
+        this.$store.dispatch('pushMusicPlayList',{url:res.data.data[0].url,name:this.songinfo.name})
+      })
+    }
   },
   watch:{
     getCardDataWYY(value){

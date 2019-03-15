@@ -9,7 +9,11 @@ const state={//要设置的全局访问的state对象
     showCardDialogWYY: false,
     cardDialogDataWYY:{},
 
-    nowMusicPlayUrl:'', //当前正在播放的url地址，每当卡片点击播放的时候，就改变此值。
+    //当前正在播放的url地址，每当卡片点击播放的时候，就改变此值。
+    nowMusicPlay:{
+        url:null,
+        name:null
+    }, 
     
     musicPlayList:[] //这个数组是干啥的呢，当我们搜索到歌曲内容的时候，把歌曲的url放到这个数组里面，最好是用对象形式保存，这样还能记录是qq的还是网易云的音乐
 };
@@ -30,7 +34,11 @@ const getters = {   //实时监听state值的变化(最新状态)
     },
 
     getNowMusicUrl(state) {
-        return state.nowMusicPlayUrl
+        return state.nowMusicPlay
+    },
+
+    getMusicPlayList(state) {
+        return state.musicPlayList
     }
 };
 const mutations = {
@@ -46,11 +54,11 @@ const mutations = {
     setCardDataWYY(state,data) {
         state.cardDialogDataWYY = data;
     },
-    setNowMusicPlayUrl(state,data){
-        state.nowMusicPlayUrl = data
+    setNowMusicPlay(state,data){    //当前播放的曲目，data是对象，值有url和name 应该还有个img，不过暂时不写
+        state.nowMusicPlay = data
     },
-    setMusicPlayList(state,data){
-        state.musicPlayList = state.musicPlayList.push(data);
+    setMusicPlayList(state,data){   //当前播放列表,musicPlayList是个数组，值应该是个对象，有img，name，url
+        state.musicPlayList.push(data);
     }
     
 }
@@ -67,8 +75,11 @@ const actions = {
     updataCardWYY(context,data) {
         context.commit('setCardDataWYY',data);
     },
-    updataNowMusicPlayUrl(context,data) {
-        context.commit('setNowMusicPlayUrl',data)
+    updataNowMusicPlay(context,data) {
+        context.commit('setNowMusicPlay',data)
+    },
+    pushMusicPlayList(context,data) {
+        context.commit('setMusicPlayList',data)
     }
 }
 const store = new Vuex.Store({

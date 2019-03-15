@@ -1,4 +1,6 @@
+
 <template>
+<!-- 目前我在写播放相关的内容，现在的进度是，当我点击播放的时候，当前是要播放，还要添加到列表中 -->
   <div class="box">
     <el-dialog title="" :visible="isShowCardQQ" width="700px" @close='closeDialog' :show-close="false" custom-class="dia-log">
       <section v-if="songinfo">
@@ -21,7 +23,7 @@
           </div>
           <div class="btns">
             <el-button type="primary" @click="nowPlay">立即播放</el-button>
-            <el-button>加入列表</el-button>
+            <el-button @click="toList">加入列表</el-button>
           </div>
         </div>
       </section>
@@ -80,18 +82,46 @@ export default {
     },
       //点击立即播放，执行此函数通过this.songinfo.track_info.mid此参数 获取到当前播放歌曲的vkey，最好拼接成url
     nowPlay(){
+      let url = this.options()
+      //url通过一大推数据参数拼接成的，因为 加入列表 的函数也用到这些函数，所有我单独放到一个函数中，options。
+      axios.get(url).then( res =>{
+        this.$store.dispatch('setStatusQQ',false)
+        //通过此ajax得到了数据中，req_0.data.midurlinfo[0].purl为拼接好的路径
+        //前面加上url地址即可 http://36.27.210.13/amobile.music.tc.qq.com/  拼接后为歌曲播放地址
+        if(res.data.code === 0){
+          let musicUrl = 'http://36.27.210.13/amobile.music.tc.qq.com/'+res.data.req_0.data.midurlinfo[0].purl;
+            //当前url是不改变播放状态的 只是用于显示img和name，以及提醒更换歌曲了
+          this.$store.dispatch('updataNowMusicPlay',{url:musicUrl,name:this.songinfo.extras.name})
+          // 播放列表才是真正控制播放内容的数据
+          this.$store.dispatch('pushMusicPlayList',{url:musicUrl,name:this.songinfo.extras.name})
+        }else{
+          this.$message.error('获取qq音乐的vkey值失败，大概率是改了接口，请提交issue');
+        }
+      })
+    },
+    //点击加入列表 执行此函数，请求音乐的播放地址啥的，和播放是一样的，只是不更新 updataNowMusicPlay 函数。
+    //这个和上面的函数只有一个不同 就是  是否更新了 updataNowMusicPlay vuex，所有者两个请求可以合并一下
+    toList(){
+      let url = this.options();
+      axios.get(url).then( res =>{
+        if(res.data.code === 0){
+          let musicUrl = 'http://36.27.210.13/amobile.music.tc.qq.com/'+res.data.req_0.data.midurlinfo[0].purl;
+          this.$store.dispatch('setStatusQQ',false)
+          this.$store.dispatch('pushMusicPlayList',{url:musicUrl,name:this.songinfo.extras.name})
+        }else{
+          this.$message.error('获取qq音乐的vkey值失败，大概率是改了接口，请提交issue');
+        }
+      })
+    },
+    //通过执行此函数，return 回url get地址
+    options(){
       let musicMidId = this.songinfo.track_info.mid;
+      let musicName = this.songinfo.extras.name
       let origin = `https://bird.ioliu.cn/v1?url=`
       let data = {"req":{"module":"CDN.SrfCdnDispatchServer","method":"GetCdnDispatch","param":{"guid":"1009711786","calltype":0,"userip":""}},"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"1009711786","songmid":[musicMidId],"songtype":[0],"uin":"0","loginflag":1,"platform":"20"}},"comm":{"uin":0,"format":"json","ct":20,"cv":0}}
       let data2 = JSON.stringify(data);
       let url = origin + `https://u.y.qq.com/cgi-bin/musicu.fcg?-=getplaysongvkey7365176950545029&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0&data=${data2}`
-    //key 是input中的值
-      axios.get(url).then( res =>{
-        //通过此ajax得到了数据中，req_0.data.midurlinfo[0].purl为拼接好的路径
-        //前面加上url地址即可 http://36.27.210.13/amobile.music.tc.qq.com/  拼接后为歌曲播放地址
-        let musicUrl = 'http://36.27.210.13/amobile.music.tc.qq.com/'+res.data.req_0.data.midurlinfo[0].purl;
-        this.$store.dispatch('updataNowMusicPlayUrl',musicUrl)
-      })
+      return url;
     }
   },
   watch:{

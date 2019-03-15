@@ -3,12 +3,12 @@
   <div class="box">
     <div class="container">
       <div class="control-btns">
-        <div class="prev" title="上一首"></div>
-        <div class="play" title="暂停播放"></div>
-        <div class="next" title="下一首"></div>
+        <!-- player.playPrev() 和 playNext 是qq音乐播放器自身的接口事件 -->
+        <div class="handle prev" title="上一首" @click="player.playPrev()"></div>
+        <div class="handle" :class="[isPlayStatus ? 'pause' : 'play']" title="暂停播放" @click="isPlay"></div>
+        <div class="handle next" title="下一首"  @click="player.playNext()"></div>
       </div>
       <div class="music-mini">
-        <!-- <audio :src="getNowMusicUrl"  controls="controls" class="current-play-tag" type='m4a' @ended='endPlay'></audio> -->
       </div>
       <div class="operation"></div>
     </div>
@@ -23,7 +23,10 @@ export default {
   data () {
     return {
       currentPlayUrl:null,
-      player:null
+      player:null,
+      isPlayStatus:true,
+      playIndex:0,
+      isUpdataList:true
     };
   },
 
@@ -31,32 +34,52 @@ export default {
 
   computed: {
     ...mapGetters({
-      getNowMusicUrl:'getNowMusicUrl'
+      getNowMusicUrl:'getNowMusicUrl',
+      getMusicPlayList:'getMusicPlayList'
     })
   },
 
   methods: {
-    endPlay(){
-      console.log(123);
+    isPlay(){
+      this.isPlayStatus ? this.player.pause() : this.player.play();
+      this.isPlayStatus = !this.isPlayStatus 
+    },
+    prevMusic(){
+      this.player.playPrev();
     }
   },
 
   created(){
     setTimeout(() => {
       this.player = new QMplayer({ target: "auto" });
-    }, 200);
-    //热河
-    // 0020WVx30hXO4K 
-      // var player = new QMplayer({ target: "auto" });
-      // console.log(123);
-      // player.play(this.getNowMusicUrl);
+    }, 500);
   },
+
   watch:{
+    //当 当前的播放url改变的时候，代表musiclist里面被添加了新的歌曲
     getNowMusicUrl(val){
-      this.player.play(this.getNowMusicUrl);
+      this.isUpdataList = false;
+      let musicOptionUrl = []; //这参数是用来做播放器列表参数的，遍历mucisList获取到此选项。
+      this.getMusicPlayList.forEach(item => {
+        musicOptionUrl.push(item.url)
+      });
+      this.player.play(musicOptionUrl,{index:musicOptionUrl.length-1});
+      setTimeout(()=>{
+        this.isUpdataList = true;
+      },500)
+    },
+    //当 我们的播放列表改变的时候，只改变list内容，并不改变当前播放
+    //暂时停止加入列表的开发，后面我看下别人的项目，再弄
+    getMusicPlayList(val){
+      if(!this.isUpdataList) return;
+      if(val.length === 0) return;
+      return 
+      let musicOptionUrl = [];
+      val.forEach(item => {
+        musicOptionUrl.push(item.url)
+      });
     }
   }
-    
 }
 
 </script>
@@ -75,6 +98,10 @@ export default {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    .handle{
+      background-image: url('../../assets/icon.png');
+      cursor: pointer;
+    }
     .control-btns{
       width: 150px;
       display: flex;
@@ -85,16 +112,12 @@ export default {
         margin-top: 5px;
         width: 30px;
         height: 30px;
-        background-image: url('../../assets/icon.png');
         background-position: -77px -118px;
-        cursor: pointer;
       }
       .play{
         width: 40px;
         height: 40px;
-        background-image: url('../../assets/icon.png');
         background-position: -137px -113px;
-        cursor: pointer;
       }
       .next{
         background-position: -207px -118px;
@@ -119,6 +142,17 @@ export default {
   background: rgba(0, 0, 0, 0);
   margin-top: 4px;
   border: none;
+}
+// 最下面的写播放状态切换下的css样式
+.pause{
+  width: 40px;
+  height: 40px;
+  background-position: -138px -194px;
+}
+.pause:hover{
+  width: 40px;
+  height: 40px;
+  background-position: -179px -194px;
 }
 </style>
 <!-- 
