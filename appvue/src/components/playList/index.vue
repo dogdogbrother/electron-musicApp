@@ -23,6 +23,7 @@ export default {
   data () {
     return {
       currentPlayUrl:null,
+      player:null
     };
   },
 
@@ -41,11 +42,21 @@ export default {
   },
 
   created(){
+    setTimeout(() => {
+      this.player = new QMplayer({ target: "auto" });
+    }, 200);
     //热河
     // 0020WVx30hXO4K 
-      var player = new QMplayer({ target: "auto" });
-      player.play("http://isure.stream.qqmusic.qq.com/C400000mu01y4LyZ1Z.m4a?guid=7485111988&vkey=BA4AA755774C6BCF64B01D7B281B431870D778F6CC538EF65AD5A78F6DBC4D0088C34962A41043AF6EB5D5D359BD7DF5159BFB92AF1FDF97&uin=0&fromtag=66");
+      // var player = new QMplayer({ target: "auto" });
+      // console.log(123);
+      // player.play(this.getNowMusicUrl);
+  },
+  watch:{
+    getNowMusicUrl(val){
+      this.player.play(this.getNowMusicUrl);
+    }
   }
+    
 }
 
 </script>
