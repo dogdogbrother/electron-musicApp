@@ -29,9 +29,7 @@ export default {
       isUpdataList:true
     };
   },
-
-  components: {},
-
+  
   computed: {
     ...mapGetters({
       getNowMusicUrl:'getNowMusicUrl',
