@@ -115,7 +115,7 @@ export default {
       })
     },
     getWangYiMusicData (value) {
-      let url = `http://localhost:3000/search/suggest?keywords=${value}`
+      let url = `http://148.70.108.11:3000/search/suggest?keywords=${value}`
       axios.get(url).then(res =>{
         const data = res.data.result
         this.songs = data.songs || []

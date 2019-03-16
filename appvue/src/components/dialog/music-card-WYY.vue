@@ -53,15 +53,16 @@ export default {
     },
     getData(id){
       //id = 29724295;
-      let url = `http://localhost:3000/song/detail?ids=${id}`
+      let url = `http://148.70.108.11:3000/song/detail?ids=${id}`
       axios.get(url).then(res =>{
         this.songinfo = res.data.songs[0];
       })
     },
     //点击立即播放，执行此函数
     nowPlay(){
+      this.$store.dispatch('setStatusWYY',false)
       let id = this.songinfo.id;
-      let url = `http://localhost:3000/song/url?id=${id}`
+      let url = `http://148.70.108.11:3000/song/url?id=${id}`
       axios.get(url).then(res =>{
         //当前url是不改变播放状态的 只是用于显示img和name，以及提醒更换歌曲了
         this.$store.dispatch('updataNowMusicPlay',{url:res.data.data[0].url,name:this.songinfo.name})

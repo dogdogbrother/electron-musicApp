@@ -59,7 +59,6 @@ const special = {
     'fm_trash.js': '/fm_trash',
     'personal_fm.js': '/personal_fm'
 }
-
 fs.readdirSync(path.join(__dirname, 'module')).reverse().forEach(file => {
     if(!(/\.js$/i.test(file))) return
     let route = (file in special) ? special[file] : '/' + file.replace(/\.js$/i, '').replace(/_/g, '/')
