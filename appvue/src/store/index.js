@@ -15,6 +15,8 @@ const state={//要设置的全局访问的state对象
         name:null
     }, 
     
+    playIndex:-1,//点击播放列表中的list歌曲，改变此值，play组件监听此值，改变播放歌曲的index
+
     musicPlayList:[] //这个数组是干啥的呢，当我们搜索到歌曲内容的时候，把歌曲的url放到这个数组里面，最好是用对象形式保存，这样还能记录是qq的还是网易云的音乐
 };
 const getters = {   //实时监听state值的变化(最新状态)
@@ -36,9 +38,11 @@ const getters = {   //实时监听state值的变化(最新状态)
     getNowMusicUrl(state) {
         return state.nowMusicPlay
     },
-
     getMusicPlayList(state) {
         return state.musicPlayList
+    },
+    getPlayIndex(state) {
+        return state.playIndex
     }
 };
 const mutations = {
@@ -55,10 +59,13 @@ const mutations = {
         state.cardDialogDataWYY = data;
     },
     setNowMusicPlay(state,data){    //当前播放的曲目，data是对象，值有url和name 应该还有个img，不过暂时不写
-        state.nowMusicPlay = data
+        state.nowMusicPlay = data;
     },
     setMusicPlayList(state,data){   //当前播放列表,musicPlayList是个数组，值应该是个对象，有img，name，url
         state.musicPlayList.push(data);
+    },
+    setPlayIndex(state,data){
+        state.playIndex = data;
     }
     
 }
@@ -80,6 +87,9 @@ const actions = {
     },
     pushMusicPlayList(context,data) {
         context.commit('setMusicPlayList',data)
+    },
+    updataPlayIndex(context,data){
+        context.commit('setPlayIndex',data)
     }
 }
 const store = new Vuex.Store({

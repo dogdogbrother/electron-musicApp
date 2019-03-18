@@ -63,11 +63,20 @@ export default {
       this.$store.dispatch('setStatusWYY',false)
       let id = this.songinfo.id;
       let url = `http://148.70.108.11:3000/song/url?id=${id}`
+      
       axios.get(url).then(res =>{
+        // time 参数是歌曲时间长度，和QQ的不同，QQ是三位，网易是6位数，所以单独处理下
+        let time = parseInt(this.songinfo.dt/1000)
+        let listParameter = { //这个参数是用来存世list歌曲的名字歌手，时长的
+          singer : this.songinfo.ar[0].name,
+          url : res.data.data[0].url,
+          name : this.songinfo.name,
+          time 
+        }
         //当前url是不改变播放状态的 只是用于显示img和name，以及提醒更换歌曲了
         this.$store.dispatch('updataNowMusicPlay',{url:res.data.data[0].url,name:this.songinfo.name})
         // 播放列表才是真正控制播放内容的数据
-        this.$store.dispatch('pushMusicPlayList',{url:res.data.data[0].url,name:this.songinfo.name})
+        this.$store.dispatch('pushMusicPlayList',listParameter)
       })
     }
   },

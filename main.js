@@ -7,7 +7,7 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   Menu.setApplicationMenu(null)
-  mainWindow = new BrowserWindow({minWidth: 1200, height: 600, minHeight: 120,frame: true})
+  mainWindow = new BrowserWindow({minWidth: 1200, height: 600, minHeight: 470,frame: true})
 
   // and load the index.html of the app.
   mainWindow.loadFile('appvue/dist/index.html')

@@ -91,9 +91,15 @@ export default {
         if(res.data.code === 0){
           let musicUrl = 'http://36.27.210.13/amobile.music.tc.qq.com/'+res.data.req_0.data.midurlinfo[0].purl;
             //当前url是不改变播放状态的 只是用于显示img和name，以及提醒更换歌曲了
+          let listParameter = { //这个参数是用来存世list歌曲的名字歌手，时长的,
+            singer : this.songinfo.track_info.singer[0].title,
+            url : musicUrl,
+            name : this.songinfo.extras.name,
+            time : this.songinfo.track_info.interval
+          }
           this.$store.dispatch('updataNowMusicPlay',{url:musicUrl,name:this.songinfo.extras.name})
           // 播放列表才是真正控制播放内容的数据
-          this.$store.dispatch('pushMusicPlayList',{url:musicUrl,name:this.songinfo.extras.name})
+          this.$store.dispatch('pushMusicPlayList',listParameter)
         }else{
           this.$message.error('获取qq音乐的vkey值失败，大概率是改了接口，请提交issue');
         }
@@ -102,6 +108,7 @@ export default {
     //点击加入列表 执行此函数，请求音乐的播放地址啥的，和播放是一样的，只是不更新 updataNowMusicPlay 函数。
     //这个和上面的函数只有一个不同 就是  是否更新了 updataNowMusicPlay vuex，所有者两个请求可以合并一下
     toList(){
+      return;
       let url = this.options();
       axios.get(url).then( res =>{
         if(res.data.code === 0){

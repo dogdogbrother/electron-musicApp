@@ -33,7 +33,8 @@ export default {
   computed: {
     ...mapGetters({
       getNowMusicUrl:'getNowMusicUrl',
-      getMusicPlayList:'getMusicPlayList'
+      getMusicPlayList:'getMusicPlayList',
+      getPlayIndex:'getPlayIndex'
     })
   },
 
@@ -76,6 +77,14 @@ export default {
       val.forEach(item => {
         musicOptionUrl.push(item.url)
       });
+    },
+    //当有人点击列表中歌曲的时候，改变index，触发次函数
+    getPlayIndex(val){
+      let musicOptionUrl = []; //这参数是用来做播放器列表参数的，遍历mucisList获取到此选项。 
+      this.getMusicPlayList.forEach(item => {
+        musicOptionUrl.push(item.url)
+      });
+      this.player.play(musicOptionUrl,{index:val});
     }
   }
 }
@@ -132,7 +141,6 @@ export default {
     }
     .operation{
       width: 140px;
-      background: #fff;
     }
   }
 }
