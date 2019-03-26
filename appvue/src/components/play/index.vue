@@ -1,6 +1,6 @@
 <!-- 用于 -->
 <template>
-  <div class="box">
+  <div class="box" @mouseenter="mouseenter" :class="[isHide ? '' : 'hide']">
     <div class="container">
       <div class="control-btns">
         <!-- player.playPrev() 和 playNext 是qq音乐播放器自身的接口事件 -->
@@ -26,7 +26,8 @@ export default {
       player:null,
       isPlayStatus:true,
       playIndex:0,
-      isUpdataList:true
+      isUpdataList:true,
+      isHide:true
     };
   },
   
@@ -45,6 +46,10 @@ export default {
     },
     prevMusic(){
       this.player.playPrev();
+    },
+    //鼠标移入时执行此代码，功能为高度增加。想了想，处理方法为给赋值class吧，单独拎一个变量出来
+    mouseenter(){
+      this.isHide = false;
     }
   },
 
@@ -92,9 +97,10 @@ export default {
 </script>
 <style lang='less' scoped>
 .box{
+  transition: 0.4s;
   position:fixed;
   left: 0;
-  bottom: 0;
+  bottom: -50px;
   height: 60px;
   background-color:rgba(0, 0, 0, 0.9);
   color: #666;
@@ -143,6 +149,12 @@ export default {
       width: 140px;
     }
   }
+}
+.hide{
+  transition: 0.4s;
+  position:fixed;
+  left: 0;
+  bottom: 0px;
 }
 .current-play-tag{
   background: rgba(0, 0, 0, 0);
