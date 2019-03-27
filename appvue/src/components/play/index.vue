@@ -1,6 +1,8 @@
 <!-- 用于 -->
 <template>
-  <div class="box" @mouseenter="mouseenter" :class="[isHide ? '' : 'hide']">
+  <div class="box" @mouseenter="mouseenter" 
+    :class="[isHide ? '' : 'hide']"
+    @mouseleave="mouseleave">
     <div class="container">
       <div class="control-btns">
         <!-- player.playPrev() 和 playNext 是qq音乐播放器自身的接口事件 -->
@@ -9,8 +11,16 @@
         <div class="handle next" title="下一首"  @click="player.playNext()"></div>
       </div>
       <div class="music-mini">
+        
       </div>
-      <div class="operation"></div>
+      <div class="operation">
+        <div class="play-way"></div>
+        <div class="list-btn" @click="openList">
+          <i></i>
+          <p>{{getMusicPlayList.length}}</p>
+          <div></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -27,7 +37,9 @@ export default {
       isPlayStatus:true,
       playIndex:0,
       isUpdataList:true,
-      isHide:true
+      isHide:true,
+      timeout:null,
+      toggle:true
     };
   },
   
@@ -41,6 +53,7 @@ export default {
 
   methods: {
     isPlay(){
+      if(!this.getMusicPlayList.length) return;
       this.isPlayStatus ? this.player.pause() : this.player.play();
       this.isPlayStatus = !this.isPlayStatus 
     },
@@ -48,11 +61,24 @@ export default {
       this.player.playPrev();
     },
     //鼠标移入时执行此代码，功能为高度增加。想了想，处理方法为给赋值class吧，单独拎一个变量出来
+    //定时器的判断是为了鼠标移出时的冲突
     mouseenter(){
+      if(this.timeout){
+        clearTimeout(this.timeout._id);
+      }
       this.isHide = false;
+    },
+    mouseleave(){
+      this.timeout = setTimeout(()=>{
+        //this.isHide = true;
+      },1000)
+    },
+    //点击裂变计数的那个btn,打开兄弟组件 歌曲列表，通过触发父级函数改变状态
+    openList(){
+      this.$emit('openList',this.toggle);
+      this.toggle = !this.toggle;
     }
   },
-
   created(){
     setTimeout(() => {
       this.player = new QMplayer({ target: "auto" });
@@ -102,7 +128,7 @@ export default {
   left: 0;
   bottom: -50px;
   height: 60px;
-  background-color:rgba(0, 0, 0, 0.9);
+  background-color:rgba(0, 0, 0, 0.86);
   color: #666;
   width: 100%;
   .container{
@@ -147,6 +173,49 @@ export default {
     }
     .operation{
       width: 140px;
+      padding: 19px 0;
+      display: flex;
+      justify-content: flex-start;
+      .play-way{
+        width: 20px;
+        background-color: #fff;
+      }
+      .list-btn{
+        width: 62px;
+        cursor: pointer;
+        display: flex;
+        justify-content: flex-start;
+        &:hover i{
+          background-position: -70px -62px;
+        }
+        i{
+          display: block;
+          width: 22px;
+          height: 20px;
+          background-image: url('../../assets/icon.png');
+          background-position: -70px -37px;
+        }
+        p{
+          width: 20px;
+          height: 20px;
+          position: relative;
+          z-index: 100;
+          background-color: rgba(0, 0, 0, 0.4); 
+          text-align: right;
+          color: #fff;
+          font-size: 12px;
+          line-height: 20px;
+        }
+        div{
+         width: 20px;
+         height: 20px;
+         background-color: rgba(0, 0, 0, 0.4); 
+         border-radius: 0 50% 50% 0;
+         position: relative;
+         left: -10px;
+         z-index: 99;
+        }
+      }
     }
   }
 }
@@ -173,32 +242,3 @@ export default {
   background-position: -179px -194px;
 }
 </style>
-<!-- 
-    我重新處理下歌曲播放的問題，首先我要找到播放鏈接。
-    已李志的熱河為例，
-    midId為 000NmduW0xvVTS 
-    docid: "102409029"
-    id: "102409029"
-    mid: "0020WVx30hXO4K"
-
-    熱河的歌曲播放的地址為
-    http://dl.stream.qqmusic.qq.com/
-    C4000020WVx30hXO4K.m4a?
-    guid=7485111988&vkey=
-    3C03CFC3A733C57371B710E60C10D24953E176BDE2A078F27785ACE27EC36985301ACFEF2E0966828E8B048DBFC1B79CE2F4283385182F4A&
-    uin=0&
-    fromtag=66
-
-    再舉例陳奕迅的 遙遠的她 mid: "004SDv7c0m2uD7"
-    播放地址為
-
-    http://dl.stream.qqmusic.qq.com/
-    C400000mu01y4LyZ1Z.m4a?
-    guid=7485111988&vkey=
-    0F822F83B22F4E445F8FD5C8FFF8338A5F4ECB1552127A204BCA945699183FE4C439D84D9AE15178188F50033F6A3ECE51F2EB4F6322051A&
-    uin=0&
-    fromtag=66
-
-    對比兩足數據我們看到vkey的值是不同的，是因為在請求歌曲之前，單獨請求了一次數據，獲取到了vkey。那麼這個接口是什麼呢。需要找一找。
-
--->
