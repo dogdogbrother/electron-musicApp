@@ -5,10 +5,13 @@
       <div class="music-list">
         <div class="header">
           <div class="listCount">播放列表 {{getMusicPlayList.length||''}}</div>
-          <div class="clear">清除</div>
+          <div class="clear" @click="clearList">清除</div>
         </div>
         <ul class="list-ul">
-            <li v-for="(item,index) in getMusicPlayList" @click="playItemMusic(item,index)">
+            <li v-for="(item,index) in getMusicPlayList" 
+              :key="item.name" 
+              @click="playItemMusic(item,index)"
+              :class="setSelectStatus(item.url)">
               <!-- 这个地方图标的class为 is-play 因为暂时有bug 所以先不写了 -->
               <div class="icon"><i :class="(getNowMusicUrl.name === item.name) ? '' : ''"></i></div>
               <p class="name">{{item.name}}</p>
@@ -51,9 +54,16 @@ export default {
       //this.$store.dispatch('updataNowMusicPlay',{url:item.url,name:item.name})
       if(this.getPlayIndex === index) return;
       this.$store.dispatch('updataPlayIndex',index)
+    },
+    clearList(){
+      // 我在vuex中的mutation有个判断，null的话不进行push，赋值[] 空值
+      this.$store.dispatch('pushMusicPlayList',null)
+    },
+    //通过传进来的url链接，来对比是不是当前播放的音乐，如果是的话，添加
+    setSelectStatus(url){
+      if(url === this.getNowMusicUrl.url) return 'select-play'
     }
   },
-
   filters:{
     timeFormat(val){
       function addFormat(time){
@@ -116,18 +126,22 @@ export default {
   }
 }
 .list-ul{
-
   li{
     color: #eee;
     display: flex;
     line-height: 24px;
     font-size: 14px;
+    &:hover{
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+    &.select-play{
+      background-color: rgba(0, 0, 0, 0.3);
+    }
     cursor: pointer;
     .icon{
       width: 12%;
       i{
         display: block;
-        
         width: 15px;
         height: 15px;
         background-position: -104px 0;
@@ -151,9 +165,6 @@ export default {
       width: 15%;
       text-align: center;
     }
-  }
-  li:hover{
-    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 </style>

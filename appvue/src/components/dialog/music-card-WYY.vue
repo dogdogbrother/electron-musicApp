@@ -74,7 +74,11 @@ export default {
           time 
         }
         //当前url是不改变播放状态的 只是用于显示img和name，以及提醒更换歌曲了
-        this.$store.dispatch('updataNowMusicPlay',{url:res.data.data[0].url,name:this.songinfo.name})
+        this.$store.dispatch('updataNowMusicPlay',{
+          url:res.data.data[0].url,
+          name:this.songinfo.name,
+          imgUrl:this.songinfo.al.picUrl
+        })
         // 播放列表才是真正控制播放内容的数据
         this.$store.dispatch('pushMusicPlayList',listParameter)
       })

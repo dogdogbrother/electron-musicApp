@@ -11,10 +11,14 @@
         <div class="handle next" title="下一首"  @click="player.playNext()"></div>
       </div>
       <div class="music-mini">
-        
+        <img :src="getNowMusicUrl.imgUrl"/>
+        <div class="progress">
+          <p>{{getNowMusicUrl.name}}</p>
+          <div class="bar"></div>
+        </div>
       </div>
       <div class="operation">
-        <div class="play-way"></div>
+        <div class="play-way" :class="setWayClass(playWay)" @click="changePlayerWay"></div>
         <div class="list-btn" @click="openList">
           <i></i>
           <p>{{getMusicPlayList.length}}</p>
@@ -39,7 +43,8 @@ export default {
       isUpdataList:true,
       isHide:true,
       timeout:null,
-      toggle:true
+      toggle:true,
+      playWay:0,  //这个是记录播放方式的，0是循环，点击为1随机播放，再点击为2单曲播放，再点击回归0
     };
   },
   
@@ -77,6 +82,23 @@ export default {
     openList(){
       this.$emit('openList',this.toggle);
       this.toggle = !this.toggle;
+    },
+    //点击改变播放循环方式
+    changePlayerWay(){
+      if(this.playWay === 2){
+        this.playWay = 0;
+        return;
+      }
+      this.playWay += 1;
+    },
+    //处理循环播放还是顺序播放的class判断
+    setWayClass(status){
+      if(status === 2) return 'single'
+      if(!status){
+        return 'cycle'
+      }else{
+        return 'random'
+      }
     }
   },
   created(){
@@ -101,6 +123,10 @@ export default {
     //当 我们的播放列表改变的时候，只改变list内容，并不改变当前播放
     //暂时停止加入列表的开发，后面我看下别人的项目，再弄
     getMusicPlayList(val){
+      if(val.length === 0){
+        this.player.play();
+        return;
+      }
       if(!this.isUpdataList) return;
       if(val.length === 0) return;
       return 
@@ -171,15 +197,31 @@ export default {
         background-position: -207px -158px;
       }
     }
+    .music-mini{
+      flex: 1;
+      padding: 10px;
+      display: flex;
+      img{
+        width: 40px;
+        height: 40px;
+        border:none;
+      }
+      .progress{
+        flex: 1;
+        padding: 0 15px;
+        p{
+          color: #fff;
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 15px;
+        }
+      }
+    }
     .operation{
       width: 140px;
       padding: 19px 0;
       display: flex;
       justify-content: flex-start;
-      .play-way{
-        width: 20px;
-        background-color: #fff;
-      }
       .list-btn{
         width: 62px;
         cursor: pointer;
@@ -230,7 +272,7 @@ export default {
   margin-top: 4px;
   border: none;
 }
-// 最下面的写播放状态切换下的css样式
+// 播放状态切换下的css样式
 .pause{
   width: 40px;
   height: 40px;
@@ -240,5 +282,30 @@ export default {
   width: 40px;
   height: 40px;
   background-position: -179px -194px;
+}
+//循环播放的样式，根据状态的不同，class对应的icon也不同，hover也不同。。
+.play-way{
+  width: 24px;
+  background-image: url('../../assets/icon.png');
+  margin-right: 12px;
+  cursor: pointer;
+  &.cycle{
+    background-position: -18px -172px;
+    &:hover{
+      background-position: -47px -172px;
+    }
+  }
+  &.random{
+    background-position: -18px -202px;
+    &:hover{
+      background-position: -47px -202px;
+    }
+  }
+  &.single{
+    background-position: -18px -142px;
+    &:hover{
+      background-position: -47px -142px;
+    }
+  }
 }
 </style>
