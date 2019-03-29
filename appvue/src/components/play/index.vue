@@ -1,4 +1,3 @@
-<!-- 用于 -->
 <template>
   <div class="box" @mouseenter="mouseenter" 
     :class="[isHide ? '' : 'hide']"
