@@ -97,7 +97,12 @@ export default {
             name : this.songinfo.extras.name,
             time : this.songinfo.track_info.interval
           }
-          this.$store.dispatch('updataNowMusicPlay',{url:musicUrl,name:this.songinfo.extras.name})
+          //这里本来的设计，只有url，name，但是现在看来还需要img，和作者 和 专辑
+          this.$store.dispatch('updataNowMusicPlay',{
+            url:musicUrl,
+            name:this.songinfo.extras.name,
+            imgUrl:this.getImgSrc(this.songinfo.track_info.album.mid)
+          })
           // 播放列表才是真正控制播放内容的数据
           this.$store.dispatch('pushMusicPlayList',listParameter)
         }else{

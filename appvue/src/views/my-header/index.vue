@@ -88,14 +88,14 @@ let url = origin + `https://u.y.qq.com/cgi-bin/musicu.fcg?-=getplaysongvkey73651
   }
 }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
 .box{
   background: #fff;
 }
 section{
   margin: 0 auto;
-  max-width: 1100px;
+  max-width: 1000px;
+  justify-content: space-around;
   height: 90px;
   display: flex;
   align-items: center;
@@ -130,6 +130,13 @@ section{
         color: #fff;
       }
     }
+  }
+}
+@media screen and (max-width: 900px) {
+  section{
+    background-color: red;
+    display: block;
+    height:auto;
   }
 }
 </style>

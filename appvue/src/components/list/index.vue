@@ -1,14 +1,19 @@
-<!--  -->
+<!-- 这个功能有个需求实现起来有点bug，需要当前歌曲的url和item的url相等才可以有
+后来发现了问题，是因为吧，切换歌曲的时候，切换的是QMplayer的方法，但是却没有响应的对图片进行处理。
+-->
 <template>
   <div class="box">
     <section class="contain">
       <div class="music-list">
         <div class="header">
           <div class="listCount">播放列表 {{getMusicPlayList.length||''}}</div>
-          <div class="clear">清除</div>
+          <div class="clear" @click="clearList">清除</div>
         </div>
         <ul class="list-ul">
-            <li v-for="(item,index) in getMusicPlayList" @click="playItemMusic(item,index)">
+            <li v-for="(item,index) in getMusicPlayList" 
+              :key="item.name" 
+              @click="playItemMusic(item,index)"
+              :class="item.url===getNowMusicUrl.url ? 'select-play' :''">
               <!-- 这个地方图标的class为 is-play 因为暂时有bug 所以先不写了 -->
               <div class="icon"><i :class="(getNowMusicUrl.name === item.name) ? '' : ''"></i></div>
               <p class="name">{{item.name}}</p>
@@ -47,13 +52,15 @@ export default {
     //点击歌曲列表中的歌曲，执行此歌曲，传入index，我预计想把这个idnex当做全局变量来使用，因为QMpaly需要index作为参数
     //然后play组件监听index全局变量，只要变了就重新执行player
     playItemMusic(item,index){
-      console.log(item);
       //this.$store.dispatch('updataNowMusicPlay',{url:item.url,name:item.name})
       if(this.getPlayIndex === index) return;
       this.$store.dispatch('updataPlayIndex',index)
+    },
+    clearList(){
+      // 我在vuex中的mutation有个判断，null的话不进行push，赋值[] 空值
+      this.$store.dispatch('pushMusicPlayList',null)
     }
   },
-
   filters:{
     timeFormat(val){
       function addFormat(time){
@@ -116,18 +123,22 @@ export default {
   }
 }
 .list-ul{
-
   li{
     color: #eee;
     display: flex;
     line-height: 24px;
     font-size: 14px;
+    &:hover{
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+    &.select-play{
+      background-color: rgba(0, 0, 0, 0.3);
+    }
     cursor: pointer;
     .icon{
       width: 12%;
       i{
         display: block;
-        
         width: 15px;
         height: 15px;
         background-position: -104px 0;
@@ -151,9 +162,6 @@ export default {
       width: 15%;
       text-align: center;
     }
-  }
-  li:hover{
-    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 </style>

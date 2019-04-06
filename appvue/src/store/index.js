@@ -12,7 +12,8 @@ const state={//要设置的全局访问的state对象
     //当前正在播放的url地址，每当卡片点击播放的时候，就改变此值。
     nowMusicPlay:{
         url:null,
-        name:null
+        name:null,
+        imgUrl:null
     }, 
     
     playIndex:-1,//点击播放列表中的list歌曲，改变此值，play组件监听此值，改变播放歌曲的index
@@ -62,7 +63,11 @@ const mutations = {
         state.nowMusicPlay = data;
     },
     setMusicPlayList(state,data){   //当前播放列表,musicPlayList是个数组，值应该是个对象，有img，name，url
-        state.musicPlayList.push(data);
+        if(data){
+            state.musicPlayList.push(data);
+        }else{
+            state.musicPlayList = [];
+        }
     },
     setPlayIndex(state,data){
         state.playIndex = data;

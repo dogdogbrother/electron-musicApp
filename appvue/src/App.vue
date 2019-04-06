@@ -1,29 +1,43 @@
 <template>
   <div id="app">
-    <my-header></my-header>
+    <myHeader></myHeader>
     <!-- <router-view/> -->
     <musicCardDLQQ></musicCardDLQQ>
     <musicCardDLWYY></musicCardDLWYY>
-    <List></List>
-    <Player></Player>
+    <List v-show = 'isShowList'></List>
+    <Player @openList = 'openList'></Player>
   </div>
 </template>
 <script>
-import myHeader from '@/views/my-header/index'
-import musicCardDLQQ from '@/components/dialog/music-card-QQ'
-import musicCardDLWYY from '@/components/dialog/music-card-WYY'
+import MyHeader from '@/views/my-header/index'
+import MusicCardDLQQ from '@/components/dialog/music-card-QQ'
+import MusicCardDLWYY from '@/components/dialog/music-card-WYY'
 import Player from '@/components/play'
 import List from '@/components/list'
 import {mapState,mapGetters,mapActions} from 'vuex';
 import { log } from 'util';
 export default {
   name: 'App',
+  data(){
+    return {
+      isShowList:false
+    }
+  },
   components:{
-    'my-header':myHeader,
-    musicCardDLQQ,
-    musicCardDLWYY,
+    MyHeader,
+    MusicCardDLQQ,
+    MusicCardDLWYY,
     Player,
     List
+  },
+  methods:{
+    openList(status){
+      if(status){
+        this.isShowList = true;
+      }else{
+        this.isShowList = false;
+      }
+    }
   }
 }
 </script>
