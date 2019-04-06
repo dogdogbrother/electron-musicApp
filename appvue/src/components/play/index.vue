@@ -49,6 +49,22 @@ export default {
   },
 
   created(){
+
+
+    function a(){
+      let b = 0;
+      return function(){
+        b += 1;
+        console.log(b); 
+      }
+    }
+    
+    
+    
+    let test = a()
+    test()
+    test()
+    test()
     setTimeout(() => {
       this.player = new QMplayer({ target: "auto" });
     }, 500);
